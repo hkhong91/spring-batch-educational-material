@@ -13,7 +13,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.RepositoryItemWriter;
@@ -39,12 +38,6 @@ public class DeleteArticlesJobConfig {
         .incrementer(new UniqueRunIdIncrementer())
         .start(this.deleteArticlesStep())
         .build();
-  }
-
-  @Bean
-  @JobScope
-  public DeleteArticlesJobParam deleteArticlesJobParam() {
-    return new DeleteArticlesJobParam();
   }
 
   @Bean
