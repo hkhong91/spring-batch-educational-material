@@ -3,7 +3,6 @@ package com.example.demo.application.job;
 import com.example.demo.application.job.param.UpdateArticlesJobParam;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.util.UniqueRunIdIncrementer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,6 +15,7 @@ import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,13 +24,22 @@ import java.util.Map;
 
 @Configuration
 @Slf4j
-@RequiredArgsConstructor
 public class UpdateArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   private final UpdateArticlesJobParam updateArticlesJobParam;
   private final EntityManagerFactory demoEntityManagerFactory;
+
+  public UpdateArticlesJobConfig(JobBuilderFactory jobBuilderFactory,
+                                 StepBuilderFactory stepBuilderFactory,
+                                 UpdateArticlesJobParam updateArticlesJobParam,
+                                 @Qualifier("demoEntityManagerFactory") EntityManagerFactory demoEntityManagerFactory) {
+    this.jobBuilderFactory = jobBuilderFactory;
+    this.stepBuilderFactory = stepBuilderFactory;
+    this.updateArticlesJobParam = updateArticlesJobParam;
+    this.demoEntityManagerFactory = demoEntityManagerFactory;
+  }
 
   @Bean
   public Job updateArticlesJob() {

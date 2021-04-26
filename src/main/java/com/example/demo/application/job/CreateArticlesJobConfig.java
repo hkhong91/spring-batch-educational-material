@@ -4,7 +4,6 @@ import com.example.demo.application.model.ArticleModel;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.repository.ArticleRepository;
 import com.example.demo.util.UniqueRunIdIncrementer;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -23,12 +22,19 @@ import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 @Slf4j
-@RequiredArgsConstructor
 public class CreateArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   private final ArticleRepository articleRepository;
+
+  public CreateArticlesJobConfig(JobBuilderFactory jobBuilderFactory,
+                                 StepBuilderFactory stepBuilderFactory,
+                                 ArticleRepository articleRepository) {
+    this.jobBuilderFactory = jobBuilderFactory;
+    this.stepBuilderFactory = stepBuilderFactory;
+    this.articleRepository = articleRepository;
+  }
 
   @Bean
   public Job createArticlesJob() {

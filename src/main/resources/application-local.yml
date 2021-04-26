@@ -18,7 +18,7 @@ spring:
   batch:
     initialize-schema: always
     job:
-      names: updateArticlesJob
+      names: deleteArticlesJob
 logging:
   level:
     root: INFO
