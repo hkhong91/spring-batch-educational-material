@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    hikari:
+      batch:
+        jdbc-url: jdbc:mysql://localhost:3306/batch
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: root
+        password: 1234
+      demo:
+        jdbc-url: jdbc:mysql://localhost:3306/demo
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: root
+        password: 1234
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  batch:
+    initialize-schema: always
