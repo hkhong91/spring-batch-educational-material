@@ -28,7 +28,6 @@ public class CreateArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
-
   private final ArticleRepository articleRepository;
 
   @Bean
@@ -44,15 +43,15 @@ public class CreateArticlesJobConfig {
   public Step createArticlesStep() {
     return this.stepBuilderFactory.get("createArticlesStep")
         .<ArticleModel, Article>chunk(10)
-        .reader(this.articlesFileReader())
-        .processor(this.articlesProcessor())
-        .writer(this.articlesWriter())
+        .reader(this.createArticlesFileReader())
+        .processor(this.createArticlesProcessor())
+        .writer(this.createArticlesWriter())
         .build();
   }
 
-  public FlatFileItemReader<ArticleModel> articlesFileReader() {
+  public FlatFileItemReader<ArticleModel> createArticlesFileReader() {
     return new FlatFileItemReaderBuilder<ArticleModel>()
-        .name("articlesFileReader")
+        .name("createArticlesFileReader")
         .resource(new ClassPathResource("Articles.csv"))
         .delimited()
         .names("title", "content")
@@ -61,14 +60,14 @@ public class CreateArticlesJobConfig {
         .build();
   }
 
-  public ItemProcessor<ArticleModel, Article> articlesProcessor() {
+  public ItemProcessor<ArticleModel, Article> createArticlesProcessor() {
     return articleModel -> Article.builder()
         .title(articleModel.getTitle())
         .content(articleModel.getContent())
         .build();
   }
 
-  public RepositoryItemWriter<Article> articlesWriter() {
+  public RepositoryItemWriter<Article> createArticlesWriter() {
     return new RepositoryItemWriterBuilder<Article>()
         .repository(this.articleRepository)
         .build();

@@ -12,10 +12,8 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.database.JpaCursorItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -67,7 +65,7 @@ public class UpdateArticlesJobConfig {
 
   public ItemProcessor<Article, Article> updateArticlesProcessor() {
     return article -> {
-      article.setContent("하하");
+      article.setContent("컨텐츠 수정");
       return article;
     };
   }

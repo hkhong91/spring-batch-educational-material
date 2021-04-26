@@ -34,8 +34,7 @@ public class DemoDataManagerConfig {
   public LocalContainerEntityManagerFactoryBean demoEntityManagerFactory() {
     LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-    vendorAdapter.setGenerateDdl(Boolean.TRUE);
-    vendorAdapter.setPrepareConnection(true);
+    vendorAdapter.setGenerateDdl(true);
 
     em.setDataSource(this.demoDataSource);
     em.setPersistenceUnitName("demoEntityManager");
@@ -52,6 +51,7 @@ public class DemoDataManagerConfig {
     Properties properties = new Properties();
     properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "update");
     properties.setProperty(AvailableSettings.SHOW_SQL, "true");
+    properties.setProperty(AvailableSettings.ALLOW_UPDATE_OUTSIDE_TRANSACTION, "true");
     return properties;
   }
 }

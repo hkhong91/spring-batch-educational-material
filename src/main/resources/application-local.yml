@@ -19,3 +19,12 @@ spring:
     initialize-schema: always
     job:
       names: updateArticlesJob
+logging:
+  level:
+    root: INFO
+  file:
+    name: /Users/hong/Logs/talkplaylove/demo-batch/app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
