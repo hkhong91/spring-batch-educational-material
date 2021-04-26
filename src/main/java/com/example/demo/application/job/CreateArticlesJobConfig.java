@@ -31,8 +31,7 @@ public class CreateArticlesJobConfig {
 
   @Bean
   public Job createArticlesJob() {
-    log.info("JOB!!!!!");
-    return jobBuilderFactory.get("createArticlesJob")
+    return this.jobBuilderFactory.get("createArticlesJob")
         .incrementer(new RunIdIncrementer())
         .start(this.createArticlesStep())
         .build();
@@ -40,8 +39,7 @@ public class CreateArticlesJobConfig {
 
   @Bean
   public Step createArticlesStep() {
-    log.info("STEP!!!!!");
-    return stepBuilderFactory.get("createArticlesStep")
+    return this.stepBuilderFactory.get("createArticlesStep")
         .<ArticleModel, Article>chunk(10)
         .reader(this.articlesFileReader())
         .processor(this.articlesProcessor())
@@ -50,7 +48,6 @@ public class CreateArticlesJobConfig {
   }
 
   public FlatFileItemReader<ArticleModel> articlesFileReader() {
-    log.info("READ!!!!!");
     return new FlatFileItemReaderBuilder<ArticleModel>()
         .name("articlesFileReader")
         .resource(new ClassPathResource("Articles.csv"))
@@ -62,7 +59,6 @@ public class CreateArticlesJobConfig {
   }
 
   public ItemProcessor<ArticleModel, Article> articlesProcessor() {
-    log.info("PROCESS!!!!!");
     return articleModel -> Article.builder()
         .title(articleModel.getTitle())
         .content(articleModel.getContent())
@@ -70,10 +66,8 @@ public class CreateArticlesJobConfig {
   }
 
   public RepositoryItemWriter<Article> articlesWriter() {
-    log.info("WRITE!!!!!");
     return new RepositoryItemWriterBuilder<Article>()
         .repository(this.articleRepository)
         .build();
   }
-
 }

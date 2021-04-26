@@ -2,6 +2,7 @@ package com.example.demo.infrastructure;
 
 import java.util.Properties;
 import javax.sql.DataSource;
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,8 +47,8 @@ public class DemoDataManagerConfig {
 
   private Properties demoJpaProperties() {
     Properties properties = new Properties();
-    properties.setProperty("hibernate.ddl-auto", "update");
-    properties.setProperty("hibernate.show_sql", "true");
+    properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "update");
+    properties.setProperty(AvailableSettings.SHOW_SQL, "true");
     return properties;
   }
 }

@@ -17,3 +17,5 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   batch:
     initialize-schema: always
+    job:
+      names: deleteArticlesJob
