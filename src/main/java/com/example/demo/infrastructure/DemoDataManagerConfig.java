@@ -1,7 +1,5 @@
 package com.example.demo.infrastructure;
 
-import java.util.Properties;
-import javax.sql.DataSource;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -34,6 +35,7 @@ public class DemoDataManagerConfig {
     LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
     vendorAdapter.setGenerateDdl(Boolean.TRUE);
+    vendorAdapter.setPrepareConnection(true);
 
     em.setDataSource(this.demoDataSource);
     em.setPersistenceUnitName("demoEntityManager");
@@ -42,6 +44,7 @@ public class DemoDataManagerConfig {
     );
     em.setJpaVendorAdapter(vendorAdapter);
     em.setJpaProperties(demoJpaProperties());
+    em.afterPropertiesSet();
     return em;
   }
 

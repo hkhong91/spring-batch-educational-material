@@ -28,6 +28,7 @@ public class CreateArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
+
   private final ArticleRepository articleRepository;
 
   @Bean

@@ -4,7 +4,6 @@ import com.example.demo.application.job.param.DeleteArticlesJobParam;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.repository.ArticleRepository;
 import com.example.demo.util.UniqueRunIdIncrementer;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -22,6 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort.Direction;
 
+import java.util.Map;
+
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
@@ -29,8 +30,9 @@ public class DeleteArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
-  private final ArticleRepository articleRepository;
   private final DeleteArticlesJobParam deleteArticlesJobParam;
+
+  private final ArticleRepository articleRepository;
 
   @Bean
   public Job deleteArticlesJob() {
@@ -45,17 +47,17 @@ public class DeleteArticlesJobConfig {
   public Step deleteArticlesStep() {
     return this.stepBuilderFactory.get("deleteArticlesStep")
         .<Article, Article>chunk(10)
-        .reader(this.articlesReader())
-        .processor(this.articlesProcessor())
-        .writer(this.articlesWriter())
+        .reader(this.deleteArticlesReader())
+        .processor(this.deleteArticlesProcessor())
+        .writer(this.deleteArticlesWriter())
         .build();
   }
 
   @Bean
   @StepScope
-  public RepositoryItemReader<Article> articlesReader() {
+  public RepositoryItemReader<Article> deleteArticlesReader() {
     return new RepositoryItemReaderBuilder<Article>()
-        .name("articlesReader")
+        .name("deleteArticlesReader")
         .repository(this.articleRepository)
         .methodName("findAllByCreatedAtBefore")
         .arguments(this.deleteArticlesJobParam.getCreatedAt())
@@ -64,14 +66,14 @@ public class DeleteArticlesJobConfig {
         .build();
   }
 
-  public ItemProcessor<Article, Article> articlesProcessor() {
+  public ItemProcessor<Article, Article> deleteArticlesProcessor() {
     return article -> {
       article.setDeleted(true);
       return article;
     };
   }
 
-  public RepositoryItemWriter<Article> articlesWriter() {
+  public RepositoryItemWriter<Article> deleteArticlesWriter() {
     return new RepositoryItemWriterBuilder<Article>()
         .repository(this.articleRepository)
         .build();

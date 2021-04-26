@@ -1,15 +1,18 @@
 package com.example.demo.infrastructure;
 
 import com.zaxxer.hikari.HikariDataSource;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 @Configuration
 public class DemoDataSourceConfig {
@@ -23,7 +26,8 @@ public class DemoDataSourceConfig {
   @Bean
   public PlatformTransactionManager demoTransactionManager(
       @Qualifier("demoEntityManagerFactory") EntityManagerFactory demoEntityManagerFactory) {
-    return new JpaTransactionManager(demoEntityManagerFactory);
+    JpaTransactionManager demoTransactionManager = new JpaTransactionManager();
+    demoTransactionManager.setEntityManagerFactory(demoEntityManagerFactory);
+    return demoTransactionManager;
   }
-
 }

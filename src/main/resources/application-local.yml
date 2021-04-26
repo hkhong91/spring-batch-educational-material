@@ -18,4 +18,4 @@ spring:
   batch:
     initialize-schema: always
     job:
-      names: deleteArticlesJob
+      names: updateArticlesJob
