@@ -3,13 +3,14 @@ package com.example.demo.application.job;
 import com.example.demo.application.model.ArticleModel;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.repository.ArticleRepository;
+import com.example.demo.util.UniqueRunIdIncrementer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
@@ -32,12 +33,13 @@ public class CreateArticlesJobConfig {
   @Bean
   public Job createArticlesJob() {
     return this.jobBuilderFactory.get("createArticlesJob")
-        .incrementer(new RunIdIncrementer())
+        .incrementer(new UniqueRunIdIncrementer())
         .start(this.createArticlesStep())
         .build();
   }
 
   @Bean
+  @JobScope
   public Step createArticlesStep() {
     return this.stepBuilderFactory.get("createArticlesStep")
         .<ArticleModel, Article>chunk(10)

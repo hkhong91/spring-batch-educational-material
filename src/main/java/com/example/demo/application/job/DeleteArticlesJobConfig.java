@@ -1,10 +1,9 @@
 package com.example.demo.application.job;
 
+import com.example.demo.application.job.param.DeleteArticlesJobParam;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.repository.ArticleRepository;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import com.example.demo.util.UniqueRunIdIncrementer;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemReaderBuilder;
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort.Direction;
@@ -33,13 +31,20 @@ public class DeleteArticlesJobConfig {
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   private final ArticleRepository articleRepository;
+  private final DeleteArticlesJobParam deleteArticlesJobParam;
 
   @Bean
   public Job deleteArticlesJob() {
     return this.jobBuilderFactory.get("deleteArticlesJob")
-        .incrementer(new RunIdIncrementer())
+        .incrementer(new UniqueRunIdIncrementer())
         .start(this.deleteArticlesStep())
         .build();
+  }
+
+  @Bean
+  @JobScope
+  public DeleteArticlesJobParam deleteArticlesJobParam() {
+    return new DeleteArticlesJobParam();
   }
 
   @Bean
@@ -47,7 +52,7 @@ public class DeleteArticlesJobConfig {
   public Step deleteArticlesStep() {
     return this.stepBuilderFactory.get("deleteArticlesStep")
         .<Article, Article>chunk(10)
-        .reader(this.articlesReader(null))
+        .reader(this.articlesReader())
         .processor(this.articlesProcessor())
         .writer(this.articlesWriter())
         .build();
@@ -55,15 +60,12 @@ public class DeleteArticlesJobConfig {
 
   @Bean
   @StepScope
-  public RepositoryItemReader<Article> articlesReader(
-      @Value("#{jobParameters[craetedDate]}") String createdDate) {
-    log.info("날짜: {}", createdDate);
-    LocalDateTime createdAt = LocalDateTime.of(LocalDate.parse(createdDate), LocalTime.MIN);
+  public RepositoryItemReader<Article> articlesReader() {
     return new RepositoryItemReaderBuilder<Article>()
         .name("articlesReader")
         .repository(this.articleRepository)
         .methodName("findAllByCreatedAtBefore")
-        .arguments(createdAt)
+        .arguments(this.deleteArticlesJobParam.getCreatedAt())
         .pageSize(10)
         .sorts(Map.of("id", Direction.ASC))
         .build();
