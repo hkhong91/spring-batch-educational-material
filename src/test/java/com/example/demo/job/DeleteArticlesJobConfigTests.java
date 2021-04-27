@@ -19,7 +19,7 @@ public class DeleteArticlesJobConfigTests {
   @Test
   public void run() throws Exception {
     this.jobLauncher.run(this.deleteArticlesJob, new JobParametersBuilder()
-        .addString("createdDate", "2020-08-25")
+        .addString("createdDate", "2020-09-15")
         .toJobParameters());
   }
 }

@@ -16,7 +16,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   batch:
-    initialize-schema: never
+    initialize-schema: always
     job:
       enabled: false
 logging:
