@@ -1,6 +1,5 @@
 package com.example.demo.application.job;
 
-import com.example.demo.application.job.constant.JobConstant;
 import com.example.demo.application.job.param.CreateArticlesJobParam;
 import com.example.demo.application.model.ArticleModel;
 import com.example.demo.domain.entity.Article;
