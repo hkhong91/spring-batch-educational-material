@@ -1,5 +1,6 @@
 package com.example.demo.application.job;
 
+import com.example.demo.application.job.param.CreateArticlesJobParam;
 import com.example.demo.application.model.ArticleModel;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.repository.ArticleRepository;
@@ -10,6 +11,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
@@ -26,13 +28,16 @@ public class CreateArticlesJobConfig {
 
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
+  private final CreateArticlesJobParam createArticlesJobParam;
   private final ArticleRepository articleRepository;
 
   public CreateArticlesJobConfig(JobBuilderFactory jobBuilderFactory,
                                  StepBuilderFactory stepBuilderFactory,
+                                 CreateArticlesJobParam createArticlesJobParam,
                                  ArticleRepository articleRepository) {
     this.jobBuilderFactory = jobBuilderFactory;
     this.stepBuilderFactory = stepBuilderFactory;
+    this.createArticlesJobParam = createArticlesJobParam;
     this.articleRepository = articleRepository;
   }
 
@@ -55,10 +60,12 @@ public class CreateArticlesJobConfig {
         .build();
   }
 
+  @Bean
+  @StepScope
   public FlatFileItemReader<ArticleModel> createArticlesFileReader() {
     return new FlatFileItemReaderBuilder<ArticleModel>()
         .name("createArticlesFileReader")
-        .resource(new ClassPathResource("Articles.csv"))
+        .resource(new ClassPathResource(createArticlesJobParam.getFileName()))
         .delimited()
         .names("title", "content")
         .targetType(ArticleModel.class)

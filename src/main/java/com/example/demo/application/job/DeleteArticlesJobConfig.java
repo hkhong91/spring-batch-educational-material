@@ -89,16 +89,6 @@ public class DeleteArticlesJobConfig {
   }
 
   public JdbcBatchItemWriter<Article> deleteArticlesWriter() {
-    try {
-      log.warn(this.batchDataSource.getConnection().getMetaData().getURL());
-      log.warn(this.batchDataSource.getConnection().getMetaData().getUserName());
-      log.warn(this.batchDataSource.getConnection().getMetaData().getDatabaseProductName());
-      log.warn(this.demoDataSource.getConnection().getMetaData().getURL());
-      log.warn(this.demoDataSource.getConnection().getMetaData().getUserName());
-      log.warn(this.demoDataSource.getConnection().getMetaData().getDatabaseProductName());
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-    }
     return new JdbcBatchItemWriterBuilder<Article>()
         .dataSource(this.demoDataSource)
         .sql("update Article set isDeleted = ? where id = ?")

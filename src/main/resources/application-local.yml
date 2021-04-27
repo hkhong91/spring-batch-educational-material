@@ -16,12 +16,16 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   batch:
-    initialize-schema: always
+    initialize-schema: never
     job:
       names: deleteArticlesJob
+      enabled: false
 logging:
   level:
     root: INFO
+    org.springframework.batch.repeat: DEBUG
+    org.springframework.batch.item: DEBUG
+    org.springframework.jdbc.core: DEBUG
   file:
     name: /Users/hong/Logs/talkplaylove/demo-batch/app.log
   logback:
