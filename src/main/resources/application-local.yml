@@ -18,7 +18,6 @@ spring:
   batch:
     initialize-schema: never
     job:
-      names: deleteArticlesJob
       enabled: false
 logging:
   level:
