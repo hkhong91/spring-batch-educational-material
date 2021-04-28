@@ -5,7 +5,9 @@ import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.entity.DeletedArticle;
 import com.example.demo.domain.repository.ArticleRepository;
 import com.example.demo.domain.repository.DeletedArticleRepository;
-import com.example.demo.util.UniqueRunIdIncrementer;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -25,10 +27,6 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Configuration
 @Slf4j
@@ -55,7 +53,6 @@ public class DeleteArticlesJobConfig {
   @Bean
   public Job deleteArticlesJob() {
     return this.jobBuilderFactory.get("deleteArticlesJob")
-        .incrementer(new UniqueRunIdIncrementer())
         .start(this.backupDeletedArticlesStep())
         .next(this.deleteArticlesStep())
         .build();

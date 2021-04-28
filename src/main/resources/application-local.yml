@@ -18,13 +18,11 @@ spring:
   batch:
     initialize-schema: always
     job:
-      enabled: false
+      enabled: true
+      names: ${job.name:NONE}
 logging:
   level:
     root: INFO
-    org.springframework.batch.repeat: DEBUG
-    org.springframework.batch.item: DEBUG
-    org.springframework.jdbc.core: DEBUG
   file:
     name: /Users/hong/Logs/talkplaylove/demo-batch/app.log
   logback:

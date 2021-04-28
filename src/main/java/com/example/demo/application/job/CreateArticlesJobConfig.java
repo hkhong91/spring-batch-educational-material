@@ -44,7 +44,6 @@ public class CreateArticlesJobConfig {
   @Bean
   public Job createArticlesJob() {
     return this.jobBuilderFactory.get("createArticlesJob")
-        .incrementer(new UniqueRunIdIncrementer())
         .start(this.createArticlesStep())
         .build();
   }
