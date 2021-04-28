@@ -16,15 +16,10 @@ public class DeleteArticlesJobConfigTests {
   @Autowired
   private JobLauncher jobLauncher;
 
-  /**
-   * java -jar ./build/libs/demo-batch-1.0.0.jar --job.name=deleteArticlesJob -createdDate=2020-09-18
-   *
-   * @throws Exception exception
-   */
   @Test
   public void run() throws Exception {
     this.jobLauncher.run(this.deleteArticlesJob, new JobParametersBuilder()
-        .addString("createdDate", "2020-09-18")
+        .addString("createdDate", "2020-09-22")
         .toJobParameters());
   }
 }

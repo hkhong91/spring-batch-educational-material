@@ -3,8 +3,7 @@ package com.example.demo.application.job;
 import com.example.demo.application.job.param.CreateArticlesJobParam;
 import com.example.demo.application.model.ArticleModel;
 import com.example.demo.domain.entity.Article;
-import com.example.demo.domain.repository.ArticleRepository;
-import com.example.demo.util.UniqueRunIdIncrementer;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -13,14 +12,15 @@ import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 @Slf4j
@@ -29,16 +29,18 @@ public class CreateArticlesJobConfig {
   private final JobBuilderFactory jobBuilderFactory;
   private final StepBuilderFactory stepBuilderFactory;
   private final CreateArticlesJobParam createArticlesJobParam;
-  private final ArticleRepository articleRepository;
+  private final JdbcTemplate demoJdbcTemplate;
+
+  private final int chunkSize = 1000;
 
   public CreateArticlesJobConfig(JobBuilderFactory jobBuilderFactory,
                                  StepBuilderFactory stepBuilderFactory,
                                  CreateArticlesJobParam createArticlesJobParam,
-                                 ArticleRepository articleRepository) {
+                                 @Qualifier("demoJdbcTemplate") JdbcTemplate demoJdbcTemplate) {
     this.jobBuilderFactory = jobBuilderFactory;
     this.stepBuilderFactory = stepBuilderFactory;
     this.createArticlesJobParam = createArticlesJobParam;
-    this.articleRepository = articleRepository;
+    this.demoJdbcTemplate = demoJdbcTemplate;
   }
 
   @Bean
@@ -52,7 +54,7 @@ public class CreateArticlesJobConfig {
   @JobScope
   public Step createArticlesStep() {
     return this.stepBuilderFactory.get("createArticlesStep")
-        .<ArticleModel, Article>chunk(10)
+        .<ArticleModel, Article>chunk(this.chunkSize)
         .reader(this.createArticlesFileReader())
         .processor(this.createArticlesProcessor())
         .writer(this.createArticlesWriter())
@@ -73,15 +75,25 @@ public class CreateArticlesJobConfig {
   }
 
   public ItemProcessor<ArticleModel, Article> createArticlesProcessor() {
+    LocalDateTime now = LocalDateTime.now();
     return articleModel -> Article.builder()
         .title(articleModel.getTitle())
         .content(articleModel.getContent())
+        .createdAt(now)
+        .updatedAt(now)
         .build();
   }
 
-  public RepositoryItemWriter<Article> createArticlesWriter() {
-    return new RepositoryItemWriterBuilder<Article>()
-        .repository(this.articleRepository)
-        .build();
+  public ItemWriter<Article> createArticlesWriter() {
+    return articles -> demoJdbcTemplate.batchUpdate(
+        "insert into Article (title, content, createdAt, updatedAt) values (?, ?, ?, ?)",
+        articles,
+        this.chunkSize,
+        (ps, article) -> {
+          ps.setObject(1, article.getTitle());
+          ps.setObject(2, article.getContent());
+          ps.setObject(3, article.getCreatedAt());
+          ps.setObject(4, article.getUpdatedAt());
+        });
   }
 }

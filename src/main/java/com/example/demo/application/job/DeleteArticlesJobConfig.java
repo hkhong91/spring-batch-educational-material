@@ -75,7 +75,7 @@ public class DeleteArticlesJobConfig {
   public Step deleteArticlesStep() {
     return this.stepBuilderFactory.get("deleteArticlesStep")
         .tasklet((contribution, chunkContext) -> {
-          Map<String, Object> jobExecutionContext = chunkContext.getStepContext().getStepExecutionContext();
+          Map<String, Object> jobExecutionContext = chunkContext.getStepContext().getJobExecutionContext();
           List<Long> deletedArticleIds = (List<Long>) jobExecutionContext.get("deletedArticleIds");
           this.articleRepository.deleteAllByIdIn(deletedArticleIds);
           return RepeatStatus.FINISHED;

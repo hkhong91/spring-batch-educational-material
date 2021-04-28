@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -44,6 +45,11 @@ public class DemoDataManagerConfig {
     em.setJpaProperties(demoJpaProperties());
     em.afterPropertiesSet();
     return em;
+  }
+
+  @Bean
+  public JdbcTemplate demoJdbcTemplate(@Qualifier("demoDataSource") DataSource demoDataSource) {
+    return new JdbcTemplate(demoDataSource);
   }
 
   private Properties demoJpaProperties() {
