@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
 
-public class FileUtils {
+public abstract class FileUtils {
 
   @SneakyThrows
   public static Stream<File> stream(Path path) {

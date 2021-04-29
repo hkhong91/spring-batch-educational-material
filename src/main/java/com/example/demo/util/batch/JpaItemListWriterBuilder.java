@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.util.batch;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.database.JpaItemWriter;

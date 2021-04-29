@@ -75,7 +75,7 @@ public class CreateArticlesJobConfig {
         .delegate(this.createArticlesFileReader())
         .resources(
             FileUtils
-                .stream(Paths.get("/Users/rupee/Storage", createArticlesJobParam.getCreatedDate()))
+                .stream(Paths.get("/Users/Hong/Storage", createArticlesJobParam.getCreatedDate()))
                 .filter(File::isFile)
                 .filter(file -> "csv" .equals(StringUtils.getFilenameExtension(file.getPath())))
                 .map(FileSystemResource::new)
@@ -84,6 +84,7 @@ public class CreateArticlesJobConfig {
   }
 
   @Bean
+  @StepScope
   public FlatFileItemReader<ArticleModel> createArticlesFileReader() {
     return new FlatFileItemReaderBuilder<ArticleModel>()
         .name("createArticlesFileReader")
