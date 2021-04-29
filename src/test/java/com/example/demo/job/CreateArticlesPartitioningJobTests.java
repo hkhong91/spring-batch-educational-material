@@ -9,17 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class CreateArticlesJobConfigTests {
+public class CreateArticlesPartitioningJobTests {
 
   @Autowired
-  private Job createArticlesJob;
+  private Job createArticlesPartitioningJob;
 
   @Autowired
   private JobLauncher jobLauncher;
 
   @Test
   public void run() throws Exception {
-    this.jobLauncher.run(this.createArticlesJob, new JobParametersBuilder()
+    this.jobLauncher.run(this.createArticlesPartitioningJob, new JobParametersBuilder()
         .addJobParameters(new JobLauncherTestUtils().getUniqueJobParameters())
         .addString("createdDate", "2021-04-29")
         .toJobParameters());
