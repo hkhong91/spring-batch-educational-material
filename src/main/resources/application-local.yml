@@ -11,23 +11,17 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: root
         password: 1234
-  jpa:
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   batch:
     initialize-schema: always
     job:
-      enabled: true
       names: ${job.name:NONE}
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
 logging:
   level:
-    root: INFO
-    org.springframework.batch.item: DEBUG
-    org.springframework.jdbc.core: DEBUG
-  file:
-    name: /Users/hong/Logs/talkplaylove/demo-batch/app.log
-  logback:
-    rollingpolicy:
-      max-file-size: 100MB
-      max-history: 30
+    root: info

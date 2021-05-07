@@ -8,5 +8,6 @@ import lombok.Setter;
 public class ArticleModel {
 
   private String title;
+
   private String content;
 }
